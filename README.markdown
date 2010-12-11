@@ -9,7 +9,7 @@ is a simple plugin for Rhthmbox, using the libfreenect library and DepthJS.
  * In a terminal
 
  
-	git clone git@github.com:vincent/rhythmbox-freenect.git
+	git clone git@github.com:vincent/rhythmbox-freenect.git ; 
 	mv rhythmbox-freenect ~/.gnome2/rhythmbox/plugins/
 
 
