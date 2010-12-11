@@ -1,0 +1,9 @@
+[RB Plugin]
+Loader=python
+Module=rhythmbox-freenect
+IAge=1
+Name=Rhythmbox Freenect Plugin
+Description=A test plugin
+Authors=Vincent Lark <vincent;lark@gmail.com>
+Copyright=Copyright © 2007 Vincent Lark
+Website=http://some.website/
