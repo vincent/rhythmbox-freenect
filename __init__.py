@@ -17,49 +17,75 @@ class RhythmboxFreenectPlugin (rb.Plugin):
         self.subscriber.connect ("tcp://*:14444")
         self.subscriber.setsockopt (zmq.SUBSCRIBE, "event")
         
+        self.last_time = time.time()
+        self.last_move_position = { 'x':50, 'y':50 }
         self.thread = threading.Thread(None, self.loop)
         self.thread.start()
         
+        print dir(rb.LibraryBrowser)
+
+
+    def deactivate(self, shell):
+        self.thread.stop()
+        self.subscriber.close()
+        
     def loop(self):
-        last_time = time.time()
         while True:
             now = time.time()
-            
             try:
                 message = self.subscriber.recv()
                 message = simplejson.loads(message)
             except:
                 message = "undefined"
             
-            #print message
+            if now < self.last_time + .8:
+                pass
+                #continue;
+
+            print message
             
             if  type(message).__name__=='str':
                 pass
-            
+
+            elif message['type'] == "HandClick":
+                print "PlayPause ?"
+                self.shell.get_player().playpause()
+
             elif message['type'] == "SwipeRight":
-                if now > last_time + .8:
+                if now > self.last_time + .8:
                     # Next
-                    if self.shell.props.shell_player.get_playing():
-                        self.shell.props.shell_player.do_next()
+                    if self.shell.get_player().get_playing():
+                        self.shell.get_player().do_next()
                     else:
                         print "Play ?"
-                        self.shell.props.shell_player.play()
+                        self.shell.get_player().play()
             
             elif message['type'] == "SwipeLeft":
-                if now > last_time + .8:
+                if now > self.last_time + .8:
                     # Previous
-                    if self.shell.props.shell_player.get_playing():
-                        self.shell.props.shell_player.do_next()
+                    if self.shell.get_player().get_playing():
+                        self.shell.get_player().do_previous()
                     else:
                         print "Play ?"
-                        self.shell.props.shell_player.play()
+                        self.shell.get_player().play()
+
+            elif message['type'] == "SwipeUp":
+                if now > self.last_time + .5:
+                    self.shell.get_player().set_volume_relative(.2)
+
+            elif message['type'] == "SwipeDown":
+                if now > self.last_time + .5:
+                    self.shell.get_player().set_volume_relative(-0.2)
 
             # Make rhythmbox to crash :/
             elif False and message['type'] == "Move":
-                if now > last_time + .05:
+                if now > self.last_time + .05:
                     volume_relative = float(1) / float(100) * float(message['data']['y'])
                     print "change volume for " + str(volume_relative)
-                    self.shell.props.shell_player.set_volume(volume_relative)
+                    #self.shell.get_player().set_volume(volume_relative)
+                    self.shell.get_player().set_volume_relative(volume_relative)
 
-            last_time = now
+            if type(message).__name__ != 'str':
+                self.last_move_position = message['data']
+            self.last_time = now
 
