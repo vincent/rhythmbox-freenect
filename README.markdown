@@ -1,5 +1,5 @@
 # Rhythmbox-Freenect
-is a simple plugin for Rhthmbox, using the libfreenect library and DepthJS.
+is a simple plugin for [Rhythmbox](http://live.gnome.org/Rhythmbox), using the [libfreenect](http://github.com/OpenKinect/libfreenect) library and [DepthJS](http://github.com/doug/depthjs).
 
 # Supported
 * left and right handswipe to change the current song
